@@ -6,6 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 .text-color-dark {
   color: #1D1616;
@@ -19,6 +20,21 @@ body {
 .bg-color-light {
   background-color: #D84040;
 }
+.body {
+  background-color: #D84040;
+  height: 100vh;
+}
+.match {
+  opacity: 0.6;
+  scale: 0.8;
+  pointer-events: none;
+  background-color: transparent;
+  border: none;
+  border-radius: 2rem;
+  background-color: green;
+  border: #1D1616 solid 0.25rem;
+}
+
 
 /* Head Style*/
 .head-memory-game {
@@ -35,11 +51,47 @@ body {
 }
 
 /* Cards */
-.card {
-  width: 5rem;
-  height: 5rem;
-  border: #1D1616 solid 0.25rem;
-  background-color: #EEEEEE;
-  border-radius: 2rem;
+.cards-container {
   position: relative;
+  top: 5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.symbols {
+  border: #1D1616 solid 0.25rem;
+  border-radius: 2rem;
+  padding: 0.25rem;
+  background-color: #EEEEEE;
+  transition: all 0.2s ease-in-out;
+}
+.symbols:hover {
+  scale: 1.1;
+  background-color: #8E1616;
+}
+.symbols:active {
+  scale: 0.9;
+}
+.card-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 2rem;
+}
+
+.restart-game-btn {
+  border-radius: 2rem;
+  border: #1D1616 solid 0.25rem;
+  position: relative;
+  top: 2rem;
+  padding: 0.25rem;
+  font-size: 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+.restart-game-btn:hover {
+  scale: 1.1;
+  color: #1D1616;
+  background-color: #EEEEEE;
+}
+.restart-game-btn:active {
+  scale: 0.9;
 }
