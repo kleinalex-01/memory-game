@@ -1,11 +1,11 @@
 import {React, useState, useEffect} from "react";
 import { symbols } from "../data";
 
-export default function UI({cards, isRestart, setIsRestart, shuffleCards, flippedCards, cardFlip}) {
+export default function UI({cards, isRestart, setIsRestart, shuffleCards, flippedCards, cardFlip, boardLocked}) {
 
     const displayCards = shuffleCards.map(card => {
         return (
-            <div key={card.id}>
+            <div key={card.id} className={`game-board ${boardLocked ? "locked" : ""}`}>
             {card.isFlipped ? 
                ( <button class={card.isDisabled ? "match" : "card-btn"} onClick={() => cardFlip(card.id)}>
                     <img src={card.image}

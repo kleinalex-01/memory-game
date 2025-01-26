@@ -35,6 +35,11 @@ body {
   border: #1D1616 solid 0.25rem;
 }
 
+.locked {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 
 /* Head Style*/
 .head-memory-game {

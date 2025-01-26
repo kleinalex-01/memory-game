@@ -3,12 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { symbols } from './data';
 import UI from "./Components/UI"
+import ReactConfetti from 'react-confetti';
 
 function App() {
   const [cards, setCards] = useState(symbols);
   const [isRestart, setIsRestart] = useState(false);
   const [shuffleCards, setShuffleCards] = useState(() => fisherYatesShuffle(cards));
   const [flippedCards, setFlippedCards] = useState([]);
+  const [boardLocked, setBoardLocked] = useState(false);
+  const [isGameWon, setIsGameWon] = useState(false);
 
   function fisherYatesShuffle(array) {
       const shuffled = [...array];
@@ -21,62 +24,82 @@ function App() {
 
   useEffect(() => {
     setShuffleCards(fisherYatesShuffle(cards));
+    setIsGameWon(false);
+    setFlippedCards([]); 
+    setBoardLocked(false);
   }, [isRestart, cards]);
+
+  useEffect(() => {
+    setShuffleCards(fisherYatesShuffle(cards));
+  }, [isRestart, cards]);
+
+  useEffect(() => {
+    if (shuffleCards.every(card => card.isMatched)) {
+      setIsGameWon(true);
+    }
+  }, [shuffleCards])
     
   function cardFlip(id) {
-    setShuffleCards(prevCards => prevCards.map(card => {
-      if (card.id === id) {
-        return { ...card, isFlipped: !card.isFlipped };
-      }
-      return card;
-    }));
+    if (boardLocked) return;
+    if (flippedCards.includes(id)) return;
+
+    setShuffleCards(prevCards =>
+      prevCards.map(card =>
+        card.id === id ? { ...card, isFlipped: !card.isFlipped } : card
+      )
+    );
   
   setFlippedCards((prev) => {
     const flipped = [...prev, id];
     if (flipped.length === 2) {
+      setBoardLocked(true);
       const [firstCardId, secondCardId] = flipped;
       const firstCard = shuffleCards.find(card => card.id === firstCardId);
       const secondCard = shuffleCards.find(card => card.id === secondCardId);
-      if (firstCard && secondCard && firstCard.value === secondCard.value) {
+
+      if (firstCard && secondCard && firstCard.value !== secondCard.value) {
         setTimeout(() => {
           setShuffleCards(prevCards =>
-            prevCards.map(card => {
-              if (card.id === firstCardId || card.id === secondCardId) {
-                return { ...card, isFlipped: true, isDisabled: true };
-              }
-              return card;              
-            }));
-            setFlippedCards([]);
-          }, 1500);
-        } else {
-          setTimeout(() => {
-            setShuffleCards(prevCards =>
-              prevCards.map(card => {
-                if (card.id === firstCardId || card.id === secondCardId) {
-                  return { ...card, isFlipped: false };
-                }
-                return card;
-              })
-            );
-            setFlippedCards([]);
-          }, 1500);
-        }
+            prevCards.map(card =>
+              card.id === firstCardId || card.id === secondCardId
+                ? { ...card, isFlipped: false }
+                : card
+            )
+          );
+          setFlippedCards([]);
+          setBoardLocked(false);
+        }, 1000);
+      } else {
+        // Case 3: Cards match
+        setTimeout(() => {
+          setShuffleCards(prevCards =>
+            prevCards.map(card =>
+              card.id === firstCardId || card.id === secondCardId
+                ? { ...card, isMatched: true }
+                : card
+            )
+          );
+          setFlippedCards([]);
+          setBoardLocked(false);
+        }, 1000);
       }
-  
-      return flipped;
-    });
-  }
-  
+    }
+
+    return flipped;
+  });
+}
 
   return (
     <>
         <>
+        {isGameWon && (<ReactConfetti width={window.innerWidth} height={window.innerHeight} />)}
         <UI cards={cards}
             isRestart={isRestart}
             setIsRestart={setIsRestart}
             shuffleCards={shuffleCards}
             flippedCards={flippedCards}
-            cardFlip={cardFlip}/>
+            cardFlip={cardFlip}
+            boardLocked={boardLocked}/>
         </>
     </>
   );
