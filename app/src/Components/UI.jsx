@@ -1,13 +1,12 @@
-import {React, useState, useEffect} from "react";
-import { symbols } from "../data";
+import {React} from "react";
 
-export default function UI({cards, isRestart, setIsRestart, shuffleCards, flippedCards, cardFlip, boardLocked}) {
+export default function UI({setIsRestart, shuffleCards, cardFlip, boardLocked, isGameWon}) {
 
     const displayCards = shuffleCards.map(card => {
         return (
             <div key={card.id} className={`game-board ${boardLocked ? "locked" : ""}`}>
             {card.isFlipped ? 
-               ( <button class={card.isDisabled ? "match" : "card-btn"} onClick={() => cardFlip(card.id)}>
+               ( <button className={`card-btn ${card.isMatched ? "isMatched" : ""}`} onClick={() => cardFlip(card.id)}>
                     <img src={card.image}
                     alt={card.value}
                     aria-label={card.value}
@@ -28,7 +27,7 @@ export default function UI({cards, isRestart, setIsRestart, shuffleCards, flippe
             <div class="container-fluid">
                 <div class="row">
                     <div class="head-memory-game col-6 bg-color-dark fw-bold text-color-light">
-                        <h1>Memory Game</h1>
+                        {isGameWon ? <h1>Game Won!</h1> : <h1>Memory Game</h1>}
                     </div>
                 </div>
             </div>

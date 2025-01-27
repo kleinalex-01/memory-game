@@ -30,14 +30,10 @@ function App() {
   }, [isRestart, cards]);
 
   useEffect(() => {
-    setShuffleCards(fisherYatesShuffle(cards));
-  }, [isRestart, cards]);
-
-  useEffect(() => {
     if (shuffleCards.every(card => card.isMatched)) {
       setIsGameWon(true);
     }
-  }, [shuffleCards])
+  }, [flippedCards, shuffleCards]);
     
   function cardFlip(id) {
     if (boardLocked) return;
@@ -70,7 +66,6 @@ function App() {
           setBoardLocked(false);
         }, 1000);
       } else {
-        // Case 3: Cards match
         setTimeout(() => {
           setShuffleCards(prevCards =>
             prevCards.map(card =>
@@ -93,13 +88,13 @@ function App() {
     <>
         <>
         {isGameWon && (<ReactConfetti width={window.innerWidth} height={window.innerHeight} />)}
-        <UI cards={cards}
-            isRestart={isRestart}
+        <UI isRestart={isRestart}
             setIsRestart={setIsRestart}
             shuffleCards={shuffleCards}
             flippedCards={flippedCards}
             cardFlip={cardFlip}
-            boardLocked={boardLocked}/>
+            boardLocked={boardLocked}
+            isGameWon={isGameWon} />
         </>
     </>
   );

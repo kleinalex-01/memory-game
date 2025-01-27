@@ -24,7 +24,7 @@ body {
   background-color: #D84040;
   height: 100vh;
 }
-.match {
+.isMatched {
   opacity: 0.6;
   scale: 0.8;
   pointer-events: none;
